@@ -13,7 +13,7 @@ module.exports = React.createClass({
   getInitialState() {
     return ({
       tasks: [],
-      completedTasks: [],
+      completedTasks: ['Play Guitar', 'Learn French', 'Wash Faella\'s car'],
       task: ''
     })
   },
@@ -105,7 +105,14 @@ module.exports = React.createClass({
 
   addTask() {
     let tasks = this.state.tasks.concat([this.state.task]);
-    this.setState({tasks})
+    this.setState({tasks});
+    this.setStorage();
+  },
+
+  clearAll(){
+    let completedTasks = this.state.completedTaskss;
+    completedTasks = [];
+    this.setState({completedTasks});
     this.setStorage();
   },
 
@@ -123,6 +130,10 @@ module.exports = React.createClass({
           }}
           onEndEditing={()=>this.addTask()}
         />
+        <TouchableOpacity onPress={()=>{this.clearAll()}}>
+          <Text style={styles.clearAll}>Clear completed</Text>
+        </TouchableOpacity>
+
         <ScrollView>
           {this.renderList(this.state.tasks)}
           {this.renderCompleted(this.state.completedTasks)}
@@ -162,5 +173,9 @@ const styles = StyleSheet.create({
   completed: {
     color: '#555',
     textDecorationLine: 'line-through'
+  },
+  clearAll:{
+    textDecorationLine: 'underline',
+    marginLeft: 10
   }
 })
