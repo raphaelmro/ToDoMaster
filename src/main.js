@@ -14,7 +14,8 @@ module.exports = React.createClass({
     return ({
       tasks: [],
       completedTasks: ['Play Guitar', 'Learn French', 'Wash Faella\'s car'],
-      task: ''
+      task: '',
+      completedCounter: 0,
     })
   },
 
@@ -27,6 +28,10 @@ module.exports = React.createClass({
       .then((response) => {
         this.setState({completedTasks: JSON.parse(response)})
       });
+    // AsyncStorage.getItem('completedCounter')
+    //   .then((response) =>{
+    //     this.setState({completedCounter: response})
+    //   })
   },
 
   componentDidUpdate() {
@@ -101,6 +106,7 @@ module.exports = React.createClass({
     });
 
     this.setStorage();
+    this.state.completedCounter  = this.state.completedCounter + 1;
   },
 
   addTask() {
@@ -130,9 +136,15 @@ module.exports = React.createClass({
           }}
           onEndEditing={()=>this.addTask()}
         />
-        <TouchableOpacity onPress={()=>{this.clearAll()}}>
-          <Text style={styles.clearAll}>Clear completed</Text>
-        </TouchableOpacity>
+        <View style={styles.featuresContainer}>
+          <TouchableOpacity onPress={()=>{this.clearAll()}}>
+            <Text style={styles.clearAll}>Clear completed</Text>
+          </TouchableOpacity>
+          <Text style={styles.completedCounter}>
+            Completed tasks:
+            <Text style={styles.counter}>{this.state.completedCounter}</Text>
+          </Text>
+        </View>
 
         <ScrollView>
           {this.renderList(this.state.tasks)}
@@ -174,8 +186,19 @@ const styles = StyleSheet.create({
     color: '#555',
     textDecorationLine: 'line-through'
   },
+  featuresContainer:{
+    flexDirection: 'row'
+  },
   clearAll:{
     textDecorationLine: 'underline',
     marginLeft: 10
+  },
+  completedCounter: {
+    textAlign: 'right',
+    marginLeft: 100
+  },
+  counter:{
+    color: 'green',
+    margin: 50
   }
 })
